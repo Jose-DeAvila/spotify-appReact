@@ -1,25 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
+import { useEffect } from 'react';
 import './App.css';
+import Init from './templates/init';
+import Home from './templates/home';
+import { getAccessToken, getUrlParams } from './services/services';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 function App() {
+
+  useEffect(()=>{
+    if(window.location.search){
+      const code:string = getUrlParams();
+      getAccessToken(code);
+    }
+    else{
+      if(localStorage.getItem('tokenInfo') && window.location.pathname === '/'){
+        const tokenInfoJSON:Dictionary<string> = JSON.parse(window.localStorage.getItem('tokenInfo') || "");
+        if(tokenInfoJSON['access_token'] !== null){
+          window.location.href = "/home";
+        }
+      }
+    }
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route path="/" exact component={Init} />
+        <Route path="/home" exact component={Home} />
+        <Route path="/*" />
+      </Switch>
+    </Router>
   );
 }
 
