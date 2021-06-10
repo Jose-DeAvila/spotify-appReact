@@ -7,24 +7,36 @@ import { ReactElement, useEffect, useState } from 'react';
 const HomeComponent = styled.main`
     text-align: center;
 `
+interface Owner {
+  display_name: string,
+  uri: string,
+}
+
+interface Url {
+  height: string,
+  url: string,
+  width: string
+}
+
+interface PlayList {
+  description: string,
+  id: string,
+  images: Dictionary<string>,
+  name: string,
+  owner: Owner
+}
 
 const ListPlaylist = styled.ul`
-    text-align: center;
-    list-style: none;
-    padding: 0;
+  list-style: none;
+  padding: 0;
+  display: flex;
+  margin: 0 20px;
 `;
 
 export default function Home(){
 
-    const [playList, setPlayList] = useState([]);
-
-    const tokenInfo = JSON.parse(window.localStorage.getItem('tokenInfo') || '');
-    const access_token:string = tokenInfo['access_token'];
-
-    useEffect(()=> {
-        getPlayList();
-    }, [])
-
+    const [playList, setPlayList] = useState<PlayList[]>([]);
+    
     const getPlayList = async () => {
         try{
             const { items } = await getUserPlaylists(access_token);
@@ -33,6 +45,13 @@ export default function Home(){
             console.log("mal");
         }
     }
+    
+    const tokenInfo = JSON.parse(window.localStorage.getItem('tokenInfo') || '');
+    const access_token:string = tokenInfo['access_token'];
+
+    useEffect(()=> {
+        getPlayList();
+    }, [])
 
     return(
         <>
@@ -40,14 +59,20 @@ export default function Home(){
             <HomeComponent>
                 <h2>Playlists:</h2>
                 <ListPlaylist>
-                    {
-                        playList.map((value):ReactElement<any, any> => {
-                            const {images} = value;
-                            return(
-                                <PlayListCards playlist_name={value['name']} playlist_id={value['id']} playlist_image={images[0].url} />
-                            )
-                        })
-                    }
+                  {
+                    playList.map(playlistInfo => {
+                      const {images} = playlistInfo;
+                      return(
+                        <PlayListCards 
+                          playlist_name={playlistInfo.name} 
+                          playlist_id={playlistInfo.id} 
+                          playlist_image={images[0]} 
+                          playlist_description={playlistInfo.description} 
+                          ownerInfo={playlistInfo.owner} 
+                        />
+                      )
+                    })
+                  }
                 </ListPlaylist>
             </HomeComponent>
         </>

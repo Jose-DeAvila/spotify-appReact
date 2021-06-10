@@ -5,7 +5,9 @@ interface BannerProps {
 }
 
 const BannerImage = styled.img`
-
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
 `
 
 export default function BannerSong({bannerImage}: BannerProps){

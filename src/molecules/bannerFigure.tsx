@@ -10,9 +10,12 @@ interface FigureProps{
 }
 
 const Figure = styled.figure`
+  margin: 0;
 `
 
 const BannerUrl = styled.a`
+  width: 100%;
+  height: 70%;
 `
 
 export default function BannerFigure({bannerImage, bannerUrl, playlist_title}: React.PropsWithChildren<FigureProps>){
