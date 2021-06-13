@@ -1,22 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
 import BannerSong from '../atoms/banner';
 import BannerCaption from '../atoms/bannerCaption';
-
-interface FigureProps{
-    bannerUrl: string,
-    bannerImage: string,
-    playlist_title: string
-}
-
-const Figure = styled.figure`
-  margin: 0;
-`
-
-const BannerUrl = styled.a`
-  width: 100%;
-  height: 70%;
-`
+import { Figure, BannerUrl } from '../assets/styles';
+import { FigureProps } from '../assets/interfaces';
 
 export default function BannerFigure({bannerImage, bannerUrl, playlist_title}: React.PropsWithChildren<FigureProps>){
     return(

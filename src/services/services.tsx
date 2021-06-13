@@ -51,8 +51,6 @@ const getAccessToken = async (code:string):Promise<void> => {
 
 const getUserInfo = async (accessToken:string):Promise<void> => {
 
-  console.log('b');
-
   const getInfoURI = 'https://api.spotify.com/v1/me';
   const response = await fetch(getInfoURI, {
     headers: {
@@ -74,7 +72,7 @@ const getUserPlaylists = async (accessToken:string) => {
   try{
     const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '');
 
-    const getPlaylistsURI:string = 'https://api.spotify.com/v1/me/playlists?limit=5';
+    const getPlaylistsURI:string = 'https://api.spotify.com/v1/me/playlists?';
     const response = await fetch(getPlaylistsURI, {
       headers:{
         'Accept': 'application/json',
@@ -98,8 +96,39 @@ const getUserPlaylists = async (accessToken:string) => {
 
 }
 
+const getPlaylistItems = async (accessToken:string, playlist_id:string) => {
+  
+  try{
+    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '');
+    console.log(refresh_token);
+
+    const getPlaylistsURI:string = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks?market=ES`;
+
+    const response = await fetch(getPlaylistsURI, {
+      headers:{
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+    
+    const PlayListInfo = await response.json();
+    if(PlayListInfo.error?.status === 401){
+      getRefreshToken(refresh_token);
+    }
+    
+    return PlayListInfo;
+  }
+  catch(error){
+    console.log(error);
+    return {error};
+  }
+
+}
+
 const getRefreshToken = async (refreshToken:string):Promise<object> => {
-  const URI:string = 'https://accounts.spotify.com/api/token';
+  try{
+    const URI:string = 'https://accounts.spotify.com/api/token';
     
     const data:Dictionary<string> = {
         'grant_type': 'refresh_token',
@@ -123,7 +152,44 @@ const getRefreshToken = async (refreshToken:string):Promise<object> => {
 
     getUserInfo(tokenInfo['access_token']);
 
-  return await response.json();
+    return await response.json();
+  }
+  catch(error){
+    console.log(error);
+    return {error};
+  }
 }
 
-export { getUrlParams, getAccessCode, getAccessToken, getUserInfo, getUserPlaylists };
+const signOutSession = () => {
+  localStorage.clear();
+  window.location.href = "/";
+}
+
+const getFavoritesSongs = async (access_token:string) => {
+  try{
+
+    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '');
+
+    const URI:string = 	'https://api.spotify.com/v1/me/tracks';
+    const response = await fetch(URI, {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${access_token}`
+      }
+    });
+
+    const FavoritesInfo = await response.json();
+    if(FavoritesInfo.error?.status === 401){
+      getRefreshToken(refresh_token);
+    }
+
+    return FavoritesInfo;
+  }
+  catch(error){
+    console.log(error);
+    return {}
+  }
+}
+
+export { getUrlParams, getAccessCode, getAccessToken, getUserInfo, getUserPlaylists, getPlaylistItems, signOutSession, getFavoritesSongs };

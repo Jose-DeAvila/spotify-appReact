@@ -1,14 +1,5 @@
-import styled from 'styled-components';
-
-interface BannerProps {
-    bannerImage: string
-}
-
-const BannerImage = styled.img`
-  width: 250px;
-  height: 250px;
-  object-fit: cover;
-`
+import { BannerImage } from '../assets/styles';
+import {BannerProps} from '../assets/interfaces';
 
 export default function BannerSong({bannerImage}: BannerProps){
     return(

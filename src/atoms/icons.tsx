@@ -1,12 +1,5 @@
-import styled from 'styled-components';
-
-interface IconProps{
-    iconClass: string
-}
-
-const IconSty = styled.i`
-    font-size: 2rem;
-`
+import { IconSty } from '../assets/styles';
+import { IconProps } from '../assets/interfaces';
 
 export default function Icon(props:IconProps){
     return (

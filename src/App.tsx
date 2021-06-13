@@ -2,6 +2,8 @@ import { useEffect } from 'react';
 import './App.css';
 import Init from './templates/init';
 import Home from './templates/home';
+import PlaylistItems from './templates/playlist';
+import Favorites from './templates/favorites';
 import { getAccessToken, getUrlParams } from './services/services';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -27,6 +29,8 @@ function App() {
       <Switch>
         <Route path="/" exact component={Init} />
         <Route path="/home" exact component={Home} />
+        <Route path="/playlist/:id" component={PlaylistItems} />
+        <Route path="/favorites" component={Favorites} />
         <Route path="/*" />
       </Switch>
     </Router>

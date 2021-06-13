@@ -1,12 +1,5 @@
-import styled from 'styled-components';
-
-interface CaptionProps{
-    captionText: string
-}
-
-const Caption = styled.figcaption`
-
-`
+import { Caption } from '../assets/styles';
+import { CaptionProps } from '../assets/interfaces';
 
 export default function BannerCaption({captionText}: CaptionProps){
     return(

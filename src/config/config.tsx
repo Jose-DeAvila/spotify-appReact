@@ -7,6 +7,7 @@ export const env = {
     "playlist-read-private",
     "playlist-modify-private",
     "playlist-modify-public",
+    "user-library-read"
   ],
   REDIRECT_URI: "http://localhost:3000/",
 };
