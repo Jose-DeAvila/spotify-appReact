@@ -29,6 +29,7 @@ const PlayListText = styled.p`
   text-overflow: ellipsis;
   overflow: hidden;
   margin: 0 auto;
+  font-family: 'Baloo Tammudu 2', cursive;
   &.userOwner{
     font-weight: bold;
   }
@@ -47,6 +48,7 @@ const ExploreButton = styled.a`
   border-radius: 10px;
   border: 1px solid transparent;
   transition: .5s ease all;
+  font-family: 'Baloo Tammudu 2', cursive;
   &:hover{
     background-color: #03414d;
     color: white;
@@ -62,6 +64,7 @@ const BannerUrl = styled.a`
   width: 100%;
   height: 70%;
   text-decoration: none;
+  font-family: 'Baloo Tammudu 2', cursive;
   &:hover img{
       transform: translateY(-10px);
   }
@@ -73,12 +76,14 @@ const Caption = styled.figcaption`
     line-height: 1;
     margin-bottom: 10px;
     font-weight: bold;
+    font-family: 'Baloo Tammudu 2', cursive;
 `;
 
 const TitleStyles = styled.p`
     margin: 0;
     width: 100%;
     line-height: 20px;
+    font-family: 'Baloo Tammudu 2', cursive;
     &:first-child{
         font-weight: 900;        
     }
@@ -124,11 +129,14 @@ const Navigation = styled.nav`
     flex-direction: column;
     z-index: 100;
     border: 1px solid white;
+    font-family: 'Baloo Tammudu 2', cursive;
+    font-family: 
 `;
 
 const NavElementLink = styled.a`
     color: white;
     text-decoration: none;
+    font-family: 'Baloo Tammudu 2', cursive;
     font-size: 1rem;
 `;
 
@@ -293,6 +301,12 @@ const Container = styled.header`
     }
 `;
 
+const SectionTitle = styled.h2`
+    text-align: center;
+    font-family: 'Baloo Tammudu 2', cursive;
+    margin: 0;
+`
+
 export {
     ListPlaylist,
     HomeComponent,
@@ -320,5 +334,6 @@ export {
     HiperToHome,
     LiElement,
     ListLinks,
-    Container
+    Container,
+    SectionTitle
 }
