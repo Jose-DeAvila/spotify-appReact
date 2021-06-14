@@ -84,7 +84,12 @@ const getUserPlaylists = async (accessToken:string) => {
     
     const PlayListInfo = await response.json();
     if(PlayListInfo.error?.status === 401){
-      getRefreshToken(refresh_token);
+      if(refresh_token){
+        getRefreshToken(refresh_token);
+      }
+      else{
+        signOutSession();
+      }
     }
     
     return PlayListInfo;
@@ -100,7 +105,6 @@ const getPlaylistItems = async (accessToken:string, playlist_id:string) => {
   
   try{
     const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '');
-    console.log(refresh_token);
 
     const getPlaylistsURI:string = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks?market=ES`;
 
@@ -114,7 +118,12 @@ const getPlaylistItems = async (accessToken:string, playlist_id:string) => {
     
     const PlayListInfo = await response.json();
     if(PlayListInfo.error?.status === 401){
-      getRefreshToken(refresh_token);
+      if(refresh_token){
+        getRefreshToken(refresh_token);
+      }
+      else{
+        signOutSession();
+      }
     }
     
     return PlayListInfo;
@@ -181,9 +190,13 @@ const getFavoritesSongs = async (access_token:string) => {
 
     const FavoritesInfo = await response.json();
     if(FavoritesInfo.error?.status === 401){
-      getRefreshToken(refresh_token);
+      if(refresh_token){
+        getRefreshToken(refresh_token);
+      }
+      else{
+        signOutSession();
+      }
     }
-
     return FavoritesInfo;
   }
   catch(error){
