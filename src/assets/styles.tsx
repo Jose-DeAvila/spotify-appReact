@@ -82,7 +82,8 @@ const Caption = styled.figcaption`
 const TitleStyles = styled.p`
     margin: 0;
     width: 100%;
-    line-height: 20px;
+    color: white;
+    line-height: 21px;
     font-family: 'Baloo Tammudu 2', cursive;
     &:first-child{
         font-weight: 900;        
@@ -130,7 +131,6 @@ const Navigation = styled.nav`
     z-index: 100;
     border: 1px solid white;
     font-family: 'Baloo Tammudu 2', cursive;
-    font-family: 
 `;
 
 const NavElementLink = styled.a`
@@ -187,39 +187,29 @@ const SongInfo = styled.li`
     padding: 0 15px;
     box-sizing: border-box;
     border-radius: 15px;
-    &:nth-child(2n){
-        background-color: #02242b;
-    }
 `;
 
 const SongNumber = styled.p`
     font-size: 1.2rem;
+    font-family: 'Baloo Tammudu 2', cursive;
+    padding-top: 7px;
+    color: white;
     margin-right: 10px;
     font-weight: bold;
 `;
 
-const NoSongs = styled.h1`
+const NoSongs = styled.h2`
     text-align: center;
+    font-family: 'Baloo Tammudu 2', cursive;
 `;
 
 const NameAndArtist = styled.section`
-    margin-right: 50px;
+    margin-right: 60px;
+    margin-top: 5px;
 `;
 
 const BtnPlay = styled.a`
-    background-color: #72dfd0;
-    padding: 10px;
-    position: absolute;
-    border-radius: 10px;
-    color: black;
-    right: 20px;
-    border: 1px solid transparent;
-    transition: .3s ease all;
-    &:hover{
-        background-color: transparent;
-        color: white;
-        border-color: white;
-    }
+    color: #72dfd0;
 `;
 
 const IconSty = styled.i`
@@ -307,6 +297,75 @@ const SectionTitle = styled.h2`
     margin: 0;
 `
 
+const PaginationButtons = styled.li`
+    display: flex;
+    align-items: center;
+    background-color: #03414d;
+    position: relative;
+    width: 100%;
+    height: 80px;
+    margin: 10px 0;
+    padding: 0 15px;
+    box-sizing: border-box;
+    border-radius: 15px;
+    justify-content: space-around;
+`
+
+const PaginationButton = styled.button`
+    font-size: 1rem;
+    color: white;
+    background: transparent;
+    border: none;
+    outline: none;
+    border: 1px solid transparent;
+    line-height: 1rem;
+    font-family: 'Baloo Tammudu 2', cursive;
+    border-radius: 3px;
+    padding: 5px 15px;
+    transition: .5s ease all;
+    cursor: pointer;
+
+    &:hover{
+        border-color: #72dfd0;
+    }
+`
+
+const NumberOfPage = styled.p`
+    font-size: 1.2rem;
+    font-family: 'Baloo Tammudu 2', cursive;
+    padding-top: 7px;
+    color: white;
+    margin-right: 10px;
+    font-weight: bold;
+
+    @media (max-width: 383px){
+        span{
+            display: none;
+        }
+    }
+`
+
+const Actions = styled.section`
+    font-size: 1.2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+    column-gap: 15px;
+    position: absolute;
+    right: 10px;
+`
+
+const BtnFav = styled.button`
+    color: #ff5555;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    font-size: 1.2rem;
+`
+
 export {
     ListPlaylist,
     HomeComponent,
@@ -330,10 +389,15 @@ export {
     NoSongs,
     NameAndArtist,
     BtnPlay,
+    BtnFav,
     IconSty,
     HiperToHome,
     LiElement,
     ListLinks,
     Container,
-    SectionTitle
+    SectionTitle,
+    PaginationButtons,
+    PaginationButton,
+    NumberOfPage,
+    Actions
 }

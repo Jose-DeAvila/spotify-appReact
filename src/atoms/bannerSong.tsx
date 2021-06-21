@@ -1,5 +1,5 @@
-import { BannerTrackStyles } from '../assets/styles';
-import { bannerSongProps } from '../assets/interfaces';
+import { BannerTrackStyles } from 'assets/styles';
+import { bannerSongProps } from 'assets/interfaces';
 
 export default function BannerTrack({bannerUrl}: bannerSongProps){
     return(

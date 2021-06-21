@@ -1,6 +1,6 @@
 import React from 'react';
-import {ListLinks} from '../assets/styles';
-import { NavListProps } from '../assets/interfaces';
+import {ListLinks} from 'assets/styles';
+import { NavListProps } from 'assets/interfaces';
 
 export default function NavList(props: React.PropsWithChildren<NavListProps>){
     return(

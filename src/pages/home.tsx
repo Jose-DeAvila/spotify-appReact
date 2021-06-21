@@ -1,32 +1,38 @@
-import { getUserPlaylists } from '../services/services';
-import Header from '../organisms/header';
-import PlayListCards from '../organisms/Playlists';
+import { getUserPlaylists } from 'services/services';
+import Header from 'organisms/header';
+import PlayListCards from 'organisms/Playlists';
 import { useCallback, useEffect, useState } from 'react';
-import { ListPlaylist, HomeComponent } from '../assets/styles';
-import { PlayList } from '../assets/interfaces';
+import { ListPlaylist, HomeComponent } from 'assets/styles';
+import { PlayList } from 'assets/interfaces';
 
 export default function Home(){
-    const [playList, setPlayList] = useState<PlayList[]>([]);
-    
-    const tokenInfo = JSON.parse(window.localStorage.getItem('tokenInfo') || '');
-    const access_token:string = tokenInfo['access_token'];
 
-    const getPlayList = useCallback(async () => {
+    // Estado para almacenar las playlists del usuario
+    const [playList, setPlayList] = useState<PlayList[]>([]);
+
+    // Función para obtener las playlists del usuario | Parámetros: access_token => [Token de la API de spotify]
+    const getPlayList = useCallback(async (access_token) => {
         try{
             const { items } = await getUserPlaylists(access_token);
             setPlayList(items);
         }catch(error){
             console.log("mal");
         }
-    }, [access_token])
+    }, [])
 
+    // UseEffect para verificar el token y si existe, obtener las playlists
     useEffect(()=> {
-        const {error} = JSON.parse(window.localStorage.getItem('tokenInfo') || '');
-        if(error){
+        let access_token:string;
+        if(!window.localStorage.getItem('tokenInfo')){
           window.localStorage.clear();
           window.location.href = "/";
         }
-        getPlayList();
+        else{
+          const tokenInfo = JSON.parse(window.localStorage.getItem('tokenInfo') || '{"error": "Token info is not provided"}');
+          access_token = tokenInfo['access_token'];
+          getPlayList(access_token);
+        }
+
     }, [getPlayList]);
 
     return(

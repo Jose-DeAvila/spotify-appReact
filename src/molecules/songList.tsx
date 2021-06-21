@@ -1,32 +1,27 @@
-import { useEffect, useCallback, useState } from 'react';
-import { getPlaylistItems } from '../services/services';
-import BannerTrack from '../atoms/bannerSong';
-import Songtitle from '../atoms/songTitle';
-import { ListOfSongs, SongInfo, SongNumber, NameAndArtist, BtnPlay, NoSongs } from '../assets/styles';
-import { SongListParams, SongInfoInt } from '../assets/interfaces';
+import BannerTrack from 'atoms/bannerSong';
+import Songtitle from 'atoms/songTitle';
+import { ListOfSongs, SongInfo, SongNumber, NameAndArtist, BtnPlay, NoSongs, PaginationButtons, PaginationButton, NumberOfPage, Actions, BtnFav } from 'assets/styles';
+import { SongListParams } from 'assets/interfaces';
 
-export default function SongList({playlist_id}: SongListParams){
+export default function SongList({urlForward, urlBack, page, songs = [], loading, favorites = [], removeFromFavorites, addToFavorites, error}: SongListParams){
 
-    const [songList, setSongList] = useState<SongInfoInt[]>([]);
+    // Función para enviar a la siguiente página (paginación)
+    const sendForward = () => {
+        window.location.href = urlForward || '/';
+    }
 
-    const tokenInfo = JSON.parse(window.localStorage.getItem('tokenInfo') || '');
-    const access_token:string = tokenInfo['access_token'];
-
-    const fetchPlayListItems = useCallback( async () => {
-        const { items } = await getPlaylistItems(access_token, playlist_id);
-        setSongList(items);
-    }, [playlist_id, access_token]);
-
-    useEffect(() => {
-        fetchPlayListItems();
-    }, [fetchPlayListItems]);
+    // Función para enviar a la anterior página (paginación)
+    const sendBackward = () => {
+        window.location.href = urlBack || '/';
+    }
 
     return(
         <ListOfSongs>
+            {loading && <NoSongs>Cargando...</NoSongs>}
             {
-                songList.length > 0 
+                songs.length > 0
                 ? 
-                songList.map((songListInfo, index) => {
+                songs.map((songListInfo, index) => {
                     return(
                         <SongInfo key={songListInfo.track.id}>
                             <SongNumber>{index+1}.</SongNumber>
@@ -35,13 +30,21 @@ export default function SongList({playlist_id}: SongListParams){
                                 <Songtitle titleSong={songListInfo.track.name}></Songtitle>
                                 <Songtitle titleSong={songListInfo.track.artists[0].name}></Songtitle>
                             </NameAndArtist>
-                            <BtnPlay rel="noreferrer" target="_blank" href={songListInfo.track.external_urls.spotify}><i className="fas fa-play"></i></BtnPlay>
+                            <Actions>
+                                <BtnFav title="Agregar / Quitar favorito">{favorites[index] ? <i onClick={() => removeFromFavorites(songListInfo.track.id, index)} className="fas fa-heart"></i> : <i onClick={() => addToFavorites(songListInfo.track.id, index)} className="far fa-heart"></i>}</BtnFav>
+                                <BtnPlay title="Reproducir" rel="noreferrer" target="_blank" href={songListInfo.track.external_urls.spotify}><i className="fas fa-play"></i></BtnPlay>
+                            </Actions>
                         </SongInfo>
                     )
                 })
                 :
-                <NoSongs>No hay canciones disponibles</NoSongs>
+                !loading && <NoSongs>{error ? error : 'No hay canciones disponibles'}</NoSongs>
             }
+            <PaginationButtons>
+                {page !== undefined && page > 0 ? <PaginationButton onClick={sendBackward}><i className="fas fa-caret-left"></i> Atrás</PaginationButton> : ''}
+                <NumberOfPage><span>Página</span> {page !== undefined ? page+1 : 0 }</NumberOfPage>
+                {page !== undefined && page >= 0 && songs.length > 0 ? <PaginationButton onClick={sendForward}>Siguiente <i className="fas fa-caret-right"></i></PaginationButton> : ''}
+            </PaginationButtons>
         </ListOfSongs>
     )
 }

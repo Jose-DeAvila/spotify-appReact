@@ -1,14 +1,15 @@
 import { useEffect } from 'react';
 import './App.css';
-import Init from './templates/init';
-import Home from './templates/home';
-import PlaylistItems from './templates/playlist';
-import Favorites from './templates/favorites';
+import Init from './pages/init';
+import Home from './pages/home';
+import PlaylistItems from './pages/playlist';
+import Favorites from './pages/favorites';
 import { getAccessToken, getUrlParams } from './services/services';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
 function App() {
 
+  // UseEffect que comprueba tokenInfo
   useEffect(()=>{
     if(window.location.search){
       const code:string = getUrlParams();
@@ -29,9 +30,13 @@ function App() {
       <Switch>
         <Route path="/" exact component={Init} />
         <Route path="/home" exact component={Home} />
+        <Route path="/playlist/:id/:page" component={PlaylistItems} />
         <Route path="/playlist/:id" component={PlaylistItems} />
+        <Route path="/favorites/:page" component={Favorites} />
         <Route path="/favorites" component={Favorites} />
-        <Route path="/*" />
+        <Route path="/*">
+          <Redirect to="/" />
+        </Route>
       </Switch>
     </Router>
   );

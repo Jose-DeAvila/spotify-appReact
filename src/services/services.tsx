@@ -1,8 +1,10 @@
-import { env } from "../config/config";
+import { env } from "config/config";
 
 declare global {
   type Dictionary<T> = { [key: string]: T};
 }
+
+const limit = 10;
 
 const getUrlParams = ():string => {
   const searchQuery:string = window.location.search;
@@ -11,7 +13,6 @@ const getUrlParams = ():string => {
 };
 
 const getAccessCode = ():void => {
-
   const AuthURI:string = `https://accounts.spotify.com/authorize?client_id=${
     env.CLIENT_ID
   }&response_type=code&redirect_uri=${encodeURIComponent(
@@ -63,16 +64,15 @@ const getUserInfo = async (accessToken:string):Promise<void> => {
   const userInfo:Dictionary<string> = await response.json();
   localStorage.setItem('userInfo', JSON.stringify(userInfo));
   
-  
   window.location.href = "/";
 }
 
 const getUserPlaylists = async (accessToken:string) => {
   
   try{
-    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '');
+    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '{"error":"Token info is not provided"}');
 
-    const getPlaylistsURI:string = 'https://api.spotify.com/v1/me/playlists?';
+    const getPlaylistsURI:string = 'https://api.spotify.com/v1/me/playlists';
     const response = await fetch(getPlaylistsURI, {
       headers:{
         'Accept': 'application/json',
@@ -81,8 +81,8 @@ const getUserPlaylists = async (accessToken:string) => {
       }
     });
 
-    
     const PlayListInfo = await response.json();
+
     if(PlayListInfo.error?.status === 401){
       if(refresh_token){
         getRefreshToken(refresh_token);
@@ -101,12 +101,12 @@ const getUserPlaylists = async (accessToken:string) => {
 
 }
 
-const getPlaylistItems = async (accessToken:string, playlist_id:string) => {
+const getPlaylistItems = async (accessToken:string, playlist_id:string, page:number) => {
   
   try{
-    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '');
+    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '{"error":"Token info is not provided"}');
 
-    const getPlaylistsURI:string = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks?market=ES`;
+    const getPlaylistsURI:string = `https://api.spotify.com/v1/playlists/${playlist_id}/tracks?market=ES&limit=${limit}&offset=${limit * page}`;
 
     const response = await fetch(getPlaylistsURI, {
       headers:{
@@ -174,12 +174,12 @@ const signOutSession = () => {
   window.location.href = "/";
 }
 
-const getFavoritesSongs = async (access_token:string) => {
+const getFavoritesSongs = async (access_token:string, page:number) => {
   try{
 
-    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '');
+    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '{"error":"Token info is not provided"}');
 
-    const URI:string = 	'https://api.spotify.com/v1/me/tracks';
+    const URI:string = 	`https://api.spotify.com/v1/me/tracks?limit=${limit}&offset=${limit * page}`;
     const response = await fetch(URI, {
       headers: {
         'Accept': 'application/json',
@@ -205,4 +205,61 @@ const getFavoritesSongs = async (access_token:string) => {
   }
 }
 
-export { getUrlParams, getAccessCode, getAccessToken, getUserInfo, getUserPlaylists, getPlaylistItems, signOutSession, getFavoritesSongs };
+const addToFavorite = async (access_token:string, id:string):Promise<any> => {
+  try{
+    const URI = `https://api.spotify.com/v1/me/tracks?ids=${id}`;
+    const response = await fetch(URI, {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${access_token}`
+      }
+    });
+
+    return response;
+
+  }
+  catch(error){
+    return {"Error": "Error to remove item from saved", "Message": error}
+  }
+}
+
+const removeFromFavorite = async (access_token:string, id:string):Promise<any> => {
+  try{
+    const URI = `https://api.spotify.com/v1/me/tracks?ids=${id}`;
+    const response = await fetch(URI, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${access_token}`
+      }
+    });
+
+    return response;
+
+  }
+  catch(error){
+    return {"Error": "Error to remove item from saved", "Message": error}
+  }
+}
+
+const checkInFavorites = async (access_token:string, id:string[]) => {
+  try{
+    const URI = `https://api.spotify.com/v1/me/tracks/contains?ids=${id.join('%2C')}`;
+
+    const response = await fetch(URI, {
+      headers:{
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${access_token}`
+      }
+    });
+
+    const favorites = await response.json();
+    return favorites;
+  }
+  catch(error){
+    return {"Error": "Error to search favorites", "Message": error}
+  }
+
+}
+
+export { getUrlParams, getAccessCode, getAccessToken, getUserInfo, getUserPlaylists, getPlaylistItems, signOutSession, getFavoritesSongs, addToFavorite, removeFromFavorite, checkInFavorites };

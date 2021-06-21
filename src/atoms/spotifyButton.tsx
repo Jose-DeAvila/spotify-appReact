@@ -1,5 +1,5 @@
-import { getAccessCode } from '../services/services';
-import { ButtonSpotify } from '../assets/styles';
+import { getAccessCode } from 'services/services';
+import { ButtonSpotify } from 'assets/styles';
 
 export default function SpotifyButton() {
     return (

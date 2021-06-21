@@ -1,6 +1,6 @@
-import BannerFigure from '../molecules/bannerFigure';
-import { PlaylistCard, ExploreButton, PlayListText } from '../assets/styles';
-import { PlayListProps } from '../assets/interfaces';
+import BannerFigure from 'molecules/bannerFigure';
+import { PlaylistCard, ExploreButton, PlayListText } from 'assets/styles';
+import { PlayListProps } from 'assets/interfaces';
 
 export default function PlayListCards({playlist_name, playlist_id, playlist_image, playlist_description, ownerInfo}: PlayListProps){
 

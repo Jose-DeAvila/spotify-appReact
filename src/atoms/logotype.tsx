@@ -1,9 +1,10 @@
-import { HiperToHome } from "../assets/styles"
+import { HiperToHome } from "assets/styles"
+import Logo from '../LogoTransparent.svg';
 
 export default function Logotype(){
     return(
         <HiperToHome href="/">
-            <img src="../logo_transparent.png" alt="MusicApp Logotype" />
+            <img src={Logo} alt="MusicApp Logotype" />
         </HiperToHome>
     )
 }
