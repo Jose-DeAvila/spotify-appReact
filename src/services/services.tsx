@@ -17,7 +17,7 @@ const getAccessCode = ():void => {
     env.CLIENT_ID
   }&response_type=code&redirect_uri=${encodeURIComponent(
     env.REDIRECT_URI
-  )}&scope=${env.CLIENT_SCOPES.join("%20")}`;
+  )}&scope=${env.CLIENT_SCOPES.join("%20")}&state=34fFs29kd09`;
 
   window.location.href = AuthURI;
 };
@@ -225,13 +225,25 @@ const addToFavorite = async (access_token:string, id:string):Promise<any> => {
 
 const removeFromFavorite = async (access_token:string, id:string):Promise<any> => {
   try{
+
+    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '{"error":"Token info is not provided"}');
+
     const URI = `https://api.spotify.com/v1/me/tracks?ids=${id}`;
-    const response = await fetch(URI, {
+    const response:any = await fetch(URI, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${access_token}`
       }
     });
+
+    if(response.error?.status === 401){
+      if(refresh_token){
+        getRefreshToken(refresh_token);
+      }
+      else{
+        signOutSession();
+      }
+    }
 
     return response;
 
@@ -244,14 +256,24 @@ const removeFromFavorite = async (access_token:string, id:string):Promise<any> =
 const checkInFavorites = async (access_token:string, id:string[]) => {
   try{
     const URI = `https://api.spotify.com/v1/me/tracks/contains?ids=${id.join('%2C')}`;
+    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '{"error":"Token info is not provided"}');
 
-    const response = await fetch(URI, {
+    const response:any = await fetch(URI, {
       headers:{
         "Accept": "application/json",
         "Content-Type": "application/json",
         "Authorization": `Bearer ${access_token}`
       }
     });
+
+    if(response.error?.status === 401){
+      if(refresh_token){
+        getRefreshToken(refresh_token);
+      }
+      else{
+        signOutSession();
+      }
+    }
 
     const favorites = await response.json();
     return favorites;
@@ -262,4 +284,69 @@ const checkInFavorites = async (access_token:string, id:string[]) => {
 
 }
 
-export { getUrlParams, getAccessCode, getAccessToken, getUserInfo, getUserPlaylists, getPlaylistItems, signOutSession, getFavoritesSongs, addToFavorite, removeFromFavorite, checkInFavorites };
+const removePlaylist = async (access_token:string, playlist_id:string): Promise<any> => {
+  try{
+    const URI = `https://api.spotify.com/v1/playlists/${playlist_id}/followers`;
+    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '{"error":"Token info is not provided"}');
+
+    const response:any = await fetch(URI, {
+      method: 'DELETE',
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${access_token}`
+      }
+    });
+
+    if(response.error?.status === 401){
+      if(refresh_token){
+        getRefreshToken(refresh_token);
+      }
+      else{
+        signOutSession();
+      }
+    }
+
+    console.log(response);
+    return response;
+  }
+  catch(error){
+    return error
+  }
+}
+
+const searchKeyword = async (access_token:string, keyword:string, page:number) => {
+  try{
+    const {refresh_token} = JSON.parse(localStorage.getItem('tokenInfo') || '{"error":"Token info is not provided"}');
+    const URI:string = `https://api.spotify.com/v1/search?q=${keyword}&type=track&limit=${limit}&offset=${limit*page}`;
+
+    const response:any = await fetch(URI, {
+      method: 'GET',
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${access_token}`
+      }
+    });
+
+    const SearchResult = await response.json();
+
+    if(response.error?.status === 401){
+      if(refresh_token){
+        getRefreshToken(refresh_token);
+      }
+      else{
+        signOutSession();
+      }
+    }
+
+    return SearchResult.tracks;
+  }
+  catch(error){
+    return {
+      "Error": error
+    }
+  }
+}
+
+export { getUrlParams, getAccessCode, getAccessToken, getUserInfo, getUserPlaylists, getPlaylistItems, signOutSession, getFavoritesSongs, addToFavorite, removeFromFavorite, checkInFavorites, removePlaylist, searchKeyword};

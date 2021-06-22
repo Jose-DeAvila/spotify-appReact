@@ -11,7 +11,12 @@ interface bannerSongProps{
 }
 
 interface IconProps{
-    iconClass: string // Clase de fontawesome para el ícono del componente
+    iconClass: string, // Clase de fontawesome para el ícono del componente
+    onClick?:any
+}
+
+interface RemoveProps{
+    onClick:any
 }
 
 interface navProps {
@@ -113,7 +118,8 @@ interface userInfo {
 
 type TParams = {
     id: string, // ID pasado por URL
-    page: string // Página pasada por URL
+    keyword: string // Palabra a buscar
+    page: string, // Página pasada por URL
 };
 
 export type{
@@ -130,5 +136,6 @@ export type{
     PlayListProps,
     PlayList,
     TParams,
-    userInfo
+    userInfo,
+    RemoveProps
 }

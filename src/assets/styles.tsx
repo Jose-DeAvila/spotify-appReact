@@ -210,10 +210,13 @@ const NameAndArtist = styled.section`
 
 const BtnPlay = styled.a`
     color: #72dfd0;
+    display: block;
+    width: 30px;
+    height: 30px;
 `;
 
 const IconSty = styled.i`
-    font-size: 2rem;
+    font-size: 1.2rem;
 `;
 
 const HiperToHome = styled.a`
@@ -350,7 +353,7 @@ const Actions = styled.section`
     display: grid;
     grid-template-columns: 1fr 1fr;
     place-items: center;
-    column-gap: 15px;
+    column-gap: 5px;
     position: absolute;
     right: 10px;
 `
@@ -358,12 +361,83 @@ const Actions = styled.section`
 const BtnFav = styled.button`
     color: #ff5555;
     background-color: transparent;
+    display: block;
+    width: 30px;
+    height: 30px;
     border: none;
     outline: none;
     padding: 0;
     margin: 0;
     cursor: pointer;
     font-size: 1.2rem;
+`
+
+const BtnDelete = styled.button`
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: #ff6464;
+    border: none;
+    outline: none;
+    font-size: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: .5s ease all;
+
+    &:hover{
+        background-color: #ff4141;
+    }
+`
+
+const FormInput = styled.form`
+    width: 50px;
+    height: auto;
+    display: flex;
+    flex-wrap: no-wrap;
+    overflow: hidden;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    transition: 1s linear all;
+
+    &:hover{
+        width: 100%;
+
+        button {
+            border-radius: 15px 0 0 15px;
+        }
+
+        input {
+            border-color: gray;
+        }
+    }
+
+    & > button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        border: none;
+        outline: none;
+        background-color: #ff6464;
+        padding: 6px 10px;
+        border-radius: 15px;
+        transition: .3s linear all;
+    }
+
+    & > input {
+        border-radius: 0 15px 15px 0;
+        border: 1px solid transparent;
+        outline: none;
+        font-size: 1rem;
+        transition: .3s linear all;
+        padding: 0 15px;
+    }
 `
 
 export {
@@ -399,5 +473,7 @@ export {
     PaginationButtons,
     PaginationButton,
     NumberOfPage,
-    Actions
+    Actions,
+    BtnDelete,
+    FormInput
 }

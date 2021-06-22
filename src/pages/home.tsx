@@ -1,6 +1,7 @@
 import { getUserPlaylists } from 'services/services';
 import Header from 'organisms/header';
 import PlayListCards from 'organisms/Playlists';
+import SearchInput from '../molecules/searchInput';
 import { useCallback, useEffect, useState } from 'react';
 import { ListPlaylist, HomeComponent } from 'assets/styles';
 import { PlayList } from 'assets/interfaces';
@@ -59,6 +60,7 @@ export default function Home(){
                     <h1>No hay playlists</h1>
                   }
                 </ListPlaylist>
+                <SearchInput></SearchInput>
             </HomeComponent>
         </>
     )

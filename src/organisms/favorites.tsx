@@ -49,33 +49,39 @@ export default function FavoritesMain({page}: SongListParams){
     
     // Elimina la canción de favoritos | Parámetros: id => [Id de la canción] -> indexSong => [Index de la canción dentro de favoritos]
     const removeFromFavorites = async (id:string, indexSong:number) => {
+        setFavorites(favorites.map((favorite, index) => {
+            if(index === indexSong){
+                favorite = !favorite;
+            }
+            return favorite
+        }));
         const response = await removeFromFavorite(access_token, id);
-        if(response.status === 200){
+        if(response.status !== 200){
             setFavorites(favorites.map((favorite, index) => {
                 if(index === indexSong){
                     favorite = !favorite;
                 }
                 return favorite
-            }))
-        }
-        else{
-            alert("Error al eliminar de favoritos");
+            }));
         }
     }
 
     // Agrega la canción a favoritos | Parámetros: id => [Id de la canción] -> indexSong => [Index de la canción dentro de favoritos]
     const addToFavorites = async(id:string, indexSong:number) => {
+        setFavorites(favorites.map((favorite, index) => {
+            if(index === indexSong){
+                favorite = !favorite;
+            }
+            return favorite
+        }));
         const response = await addToFavorite(access_token, id);
-        if(response.status === 200){
+        if(response.status !== 200){
             setFavorites(favorites.map((favorite, index) => {
                 if(index === indexSong){
                     favorite = !favorite;
                 }
                 return favorite
-            }))
-        }
-        else{
-            alert("Error al colocar en favoritos");
+            }));
         }
     }
 

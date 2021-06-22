@@ -1,31 +1,29 @@
-import SongList from 'molecules/songList';
-import { SongInfoInt, SongListParams } from 'assets/interfaces';
-import { useCallback, useEffect, useState } from 'react';
-import { addToFavorite, checkInFavorites, getPlaylistItems, removeFromFavorite, removePlaylist } from 'services/services';
-import RemoveButton from '../atoms/removeButton';
+import { SongInfoInt } from "../assets/interfaces";
+import { useCallback, useEffect, useState } from "react";
+import { addToFavorite, checkInFavorites, removeFromFavorite, searchKeyword } from "../services/services";
+import ResultList from "../molecules/resultList";
 
-export default function PlaylistItemsMain({playlist_id, page}: SongListParams){
-    
+export default function SearchMain({keyword, page}:any){
+
     // Estados: songList => [Canciones] | loading => [Estado de carga] | favorites => [Lista de favoritos] | error => [Mensaje de error]
     const [songList, setSongList] = useState<SongInfoInt[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [favorites, setFavorites] = useState<boolean[]>([]);
     
     // Se definen las dos urls de la paginación
-    const urlForward:string = `/playlist/${playlist_id}/${page === 0 ? 1 : page && (page+1)}`;
-    const urlBack:string = `/playlist/${playlist_id}/${page && (page-1)}`;
+    const urlForward:string = `/search/${keyword}/${page === 0 ? 1 : page && (page+1)}`;
+    const urlBack:string = `/search/${keyword}/${page && (page-1)}`;
     
     // Se recupera el token del localstorage
     const tokenInfo = JSON.parse(window.localStorage.getItem('tokenInfo') || '{"Error": "Token info is not provided"}');
     const access_token:string = tokenInfo['access_token'];
     
     // Función para saber cuales de las canciones anteriores son favoritos
-    const fetchFavorites = useCallback(async (items:SongInfoInt[]) => {
+    const fetchFavorites = useCallback(async (items:any) => {
         let aux1:string[] = [];
-        
         if(items && items.length > 0){
             for(let i = 0; i<items.length; i++){
-                aux1.push(items[i].track.id);
+                aux1.push(items[i].id);
             }
             const data = await checkInFavorites(access_token, aux1);
             setFavorites(data);
@@ -36,9 +34,9 @@ export default function PlaylistItemsMain({playlist_id, page}: SongListParams){
     }, [access_token]);
     
     // Función para traer las canciones de la playlist
-    const fetchPlaylistItems = useCallback(async() => {
+    const fetchResults = useCallback(async() => {
         setLoading(true);
-        const data = await getPlaylistItems(access_token, playlist_id, page);
+        const data = await searchKeyword(access_token, keyword, page);
         if(!data.error && data.items.length > 0){
             setSongList(data.items);
             fetchFavorites(data.items);
@@ -48,7 +46,7 @@ export default function PlaylistItemsMain({playlist_id, page}: SongListParams){
             setSongList([]);
             setLoading(false);
         }
-    }, [access_token, fetchFavorites, page, playlist_id])
+    }, [access_token, fetchFavorites, page, keyword])
 
     // Elimina la canción de favoritos | Parámetros: id => [Id de la canción] -> indexSong => [Index de la canción dentro de favoritos]
     const removeFromFavorites = async (id:string, indexSong:number) => {
@@ -88,23 +86,14 @@ export default function PlaylistItemsMain({playlist_id, page}: SongListParams){
         }
     }
 
-    // Eliminar la playlist actual
-    const fetchRemovePlaylist = async() => {
-        const response = await removePlaylist(access_token, playlist_id);
-        if(response.status === 200){
-            window.location.href = "/";
-        }
-    }
-
-    // UseEffect para traer canciones
+    // UseEffect para traer resultados
     useEffect(() => {
-        fetchPlaylistItems();
-    }, [fetchPlaylistItems])
+        fetchResults();
+    }, [fetchResults])
 
     return(
         <main>
-            <SongList playlist_id={playlist_id || ''} urlForward={urlForward} urlBack={urlBack} page={page || 0} songs={songList} favorites={favorites} loading={loading} removeFromFavorites={removeFromFavorites} addToFavorites={addToFavorites}></SongList>
-            <RemoveButton onClick={fetchRemovePlaylist} ></RemoveButton>
+            <ResultList urlForward={urlForward} urlBack={urlBack} page={page || 0} songs={songList} favorites={favorites} loading={loading} removeFromFavorites={removeFromFavorites} addToFavorites={addToFavorites}></ResultList>
         </main>
     )
 }

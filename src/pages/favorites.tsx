@@ -1,5 +1,6 @@
 import Header from 'organisms/header';
 import FavoritesMain from 'organisms/favorites';
+import SearchInput from 'molecules/searchInput';
 import { RouteComponentProps } from 'react-router-dom';
 import { TParams } from 'assets/interfaces';
 import { useEffect } from 'react';
@@ -18,6 +19,7 @@ export default function Favorites({match}:RouteComponentProps<TParams>){
         <>
             <Header />
             <FavoritesMain page={parseInt(match.params.page) || 0}/>
+            <SearchInput></SearchInput>
         </>
     )
 }

@@ -25,13 +25,13 @@ export default function SongList({urlForward, urlBack, page, songs = [], loading
                     return(
                         <SongInfo key={songListInfo.track.id}>
                             <SongNumber>{index+1}.</SongNumber>
-                            <BannerTrack bannerUrl={songListInfo.track.album.images[2].url}></BannerTrack>
+                            <BannerTrack bannerUrl={!songListInfo.track.album.images[2] ? 'https://community.spotify.com/t5/image/serverpage/image-id/25294i2836BD1C1A31BDF2/image-size/original?v=mpbl-1&px=-1' : songListInfo.track.album.images[2].url}></BannerTrack>
                             <NameAndArtist style={{whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow:'hidden'}}>
                                 <Songtitle titleSong={songListInfo.track.name}></Songtitle>
                                 <Songtitle titleSong={songListInfo.track.artists[0].name}></Songtitle>
                             </NameAndArtist>
                             <Actions>
-                                <BtnFav title="Agregar / Quitar favorito">{favorites[index] ? <i onClick={() => removeFromFavorites(songListInfo.track.id, index)} className="fas fa-heart"></i> : <i onClick={() => addToFavorites(songListInfo.track.id, index)} className="far fa-heart"></i>}</BtnFav>
+                                <BtnFav>{favorites[index] ? <i onClick={() => removeFromFavorites(songListInfo.track.id, index)} className="fas fa-heart" title="Eliminar de favoritos"></i> : <i onClick={() => addToFavorites(songListInfo.track.id, index)} className="far fa-heart" title="Agregar a favoritos"></i>}</BtnFav>
                                 <BtnPlay title="Reproducir" rel="noreferrer" target="_blank" href={songListInfo.track.external_urls.spotify}><i className="fas fa-play"></i></BtnPlay>
                             </Actions>
                         </SongInfo>

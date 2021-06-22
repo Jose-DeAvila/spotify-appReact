@@ -4,6 +4,7 @@ import Init from './pages/init';
 import Home from './pages/home';
 import PlaylistItems from './pages/playlist';
 import Favorites from './pages/favorites';
+import SearchPage from './pages/search';
 import { getAccessToken, getUrlParams } from './services/services';
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
@@ -34,6 +35,8 @@ function App() {
         <Route path="/playlist/:id" component={PlaylistItems} />
         <Route path="/favorites/:page" component={Favorites} />
         <Route path="/favorites" component={Favorites} />
+        <Route path="/search/:keyword/:page" component={SearchPage} />
+        <Route path="/search/:keyword" component={SearchPage} />
         <Route path="/*">
           <Redirect to="/" />
         </Route>
