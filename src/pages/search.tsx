@@ -5,9 +5,6 @@ import { RouteComponentProps } from 'react-router-dom';
 import { TParams } from 'assets/interfaces';
 
 export default function PlaylistItems({match}: RouteComponentProps<TParams>){
-
-    console.log(match.params.page);
-
     return(
         <>
             <Header />
